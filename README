@@ -1,0 +1,21 @@
+# WebShutter 📸
+
+A simple Python tool to check a URL and take a screenshot using Selenium.
+
+## 🚀 Features
+
+- Open a webpage using headless Chrome
+- Automatically take a screenshot
+- Save screenshots to disk
+
+## 🧰 Requirements
+
+You need Python 3.7+ installed.
+
+Install dependencies using pip:
+
+```bash
+pip install selenium pillow
+
+
+
