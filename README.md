@@ -1,6 +1,6 @@
 # 📸 WebShutter
 
-**WebShutter** is a lightweight Python automation tool that opens a list of URLs, checks each page, and takes screenshots using Selenium and Pillow.
+**WebShutter** is a lightweight Python automation tool that opens a list tons of URLs, checks each page, and takes screenshots using Selenium and Pillow.
 
 Perfect for QA testing, bug reporting, asset monitoring, and visual recon.
 
