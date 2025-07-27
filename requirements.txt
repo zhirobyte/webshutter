@@ -1,0 +1,2 @@
+selenium==4.21.0
+pillow==10.3.0
