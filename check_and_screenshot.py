@@ -9,7 +9,7 @@ from selenium.common.exceptions import WebDriverException
 from datetime import datetime
 
 # GUI to pick the file
-def choose_file():
+def choose_file(): #this will load and import manually to easy access
     root = tk.Tk()
     root.withdraw()
     file_path = filedialog.askopenfilename(
