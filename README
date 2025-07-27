@@ -1,21 +1,33 @@
-# WebShutter 📸
+# 📸 WebShutter
 
-A simple Python tool to check a URL and take a screenshot using Selenium.
+**WebShutter** is a lightweight Python automation tool that opens a list of URLs, checks each page, and takes screenshots using Selenium and Pillow.
+
+Perfect for QA testing, bug reporting, asset monitoring, and visual recon.
+
+---
 
 ## 🚀 Features
 
-- Open a webpage using headless Chrome
-- Automatically take a screenshot
-- Save screenshots to disk
+- ✅ Takes screenshots of URLs from a list
+- ✅ Headless Chrome browsing using Selenium
+- ✅ Stores screenshots in a structured directory
+- ✅ Easy setup and use
+- ✅ Compatible with Windows, Linux, and macOS
 
-## 🧰 Requirements
+---
 
-You need Python 3.7+ installed.
+## 🌐 Get Your Subdomains (Optional)
 
-Install dependencies using pip:
+To discover subdomains or URLs to scan, use [SubIntel](https://subintel.tushal.io/)  
+📌 Credit: [@padsalatushal](https://github.com/padsalatushal)
 
-```bash
-pip install selenium pillow
+### Steps:
 
+1. Go to [https://subintel.tushal.io/](https://subintel.tushal.io/)
+2. Enter your domain (e.g., `example.com`)
+3. Copy the subdomain results
+4. Paste them into a file called `subdomains.txt` (one URL per line)
+
+---
 
 
