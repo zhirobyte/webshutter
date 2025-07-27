@@ -39,7 +39,10 @@ def watermark_image(img_path, status_code):
         font = ImageFont.load_default()
 
     text = f"{status_code} {'OK' if status_code < 400 else 'ERROR'}"
-    text_width, text_height = draw.textsize(text, font=font)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+
 
     # choose color: green for OK, blue otherwise
     color = (0, 200, 0) if status_code < 400 else (0, 0, 200)
