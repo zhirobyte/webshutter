@@ -9,7 +9,7 @@ from selenium.common.exceptions import WebDriverException
 from datetime import datetime
 
 # GUI to pick the file
-def choose_file(): #this will load and import manually to easy access
+def choose_file():
     root = tk.Tk()
     root.withdraw()
     file_path = filedialog.askopenfilename(
@@ -47,7 +47,13 @@ def main():
         print("❌ No file selected.")
         return
 
-    output_dir = "screenshots"
+    # Ask user to name this session/project
+    project_name = input("📁 Enter a name for this screenshot session (e.g., 'google', 'pentest-job1'): ").strip()
+    if not project_name:
+        print("❌ No name entered. Exiting.")
+        return
+
+    output_dir = os.path.join("screenshots", project_name)
     os.makedirs(output_dir, exist_ok=True)
 
     with open(file_path, "r") as f:
@@ -61,7 +67,7 @@ def main():
         capture_screenshot(driver, domain, output_dir)
 
     driver.quit()
-    print("✅ All done.")
+    print(f"✅ All screenshots saved in: {output_dir}")
 
 if __name__ == "__main__":
     main()
