@@ -2,23 +2,24 @@ import os
 import time
 import tkinter as tk
 from tkinter import filedialog
+import httpx
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from datetime import datetime
+from PIL import Image, ImageDraw, ImageFont
 
 # GUI to pick the file
 def choose_file():
     root = tk.Tk()
     root.withdraw()
-    file_path = filedialog.askopenfilename(
+    return filedialog.askopenfilename(
         title="Select a file with subdomains or URLs",
         filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
     )
-    return file_path
 
-# Setup browser options
+# Setup headless Chrome
 def setup_browser():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -27,47 +28,84 @@ def setup_browser():
     chrome_options.add_argument("--ignore-certificate-errors")
     return webdriver.Chrome(service=Service(), options=chrome_options)
 
-# Screenshot a single domain
-def capture_screenshot(driver, url, output_dir):
+# Overlay watermark onto screenshot
+def watermark_image(img_path, status_code):
+    img = Image.open(img_path)
+    draw = ImageDraw.Draw(img)
+    font_size = max(20, img.width // 40)
+    try:
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except:
+        font = ImageFont.load_default()
+
+    text = f"{status_code} {'OK' if status_code < 400 else 'ERROR'}"
+    text_width, text_height = draw.textsize(text, font=font)
+
+    # choose color: green for OK, blue otherwise
+    color = (0, 200, 0) if status_code < 400 else (0, 0, 200)
+
+    # position: 10px from top-right
+    x = img.width - text_width - 10
+    y = 10
+
+    # draw semi-transparent box
+    box_padding = 6
+    box = [x - box_padding, y - box_padding,
+           x + text_width + box_padding, y + text_height + box_padding]
+    draw.rectangle(box, fill=(0,0,0,128))
+    draw.text((x, y), text, fill=color, font=font)
+
+    img.save(img_path)
+
+# Capture status + screenshot + watermark
+def capture(driver, url, output_dir):
+    # 1) get status via httpx
+    try:
+        r = httpx.get(url, timeout=10, follow_redirects=True)
+        status = r.status_code
+    except Exception:
+        status = 0
+
+    # 2) selenium screenshot
     try:
         driver.get(url)
-        time.sleep(3)  # wait for page to load
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = url.replace("http://", "").replace("https://", "").replace("/", "_")
-        screenshot_path = os.path.join(output_dir, f"{filename}_{timestamp}.png")
-        driver.save_screenshot(screenshot_path)
-        print(f"✅ Screenshot saved: {screenshot_path}")
-    except WebDriverException as e:
-        print(f"❌ Failed to load {url}: {e.msg}")
+        time.sleep(2)
+    except WebDriverException:
+        pass  # still save whatever was rendered
 
-# Main flow
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe = url.replace("http://", "").replace("https://", "").replace("/", "_")
+    path = os.path.join(output_dir, f"{safe}_{timestamp}.png")
+    driver.save_screenshot(path)
+
+    # 3) watermark
+    watermark_image(path, status)
+    print(f"✅ {url} [{status}] → {path}")
+
 def main():
     file_path = choose_file()
     if not file_path:
-        print("❌ No file selected.")
+        print("❌ No file selected. Exiting.")
         return
 
-    # Ask user to name this session/project
-    project_name = input("📁 Enter a name for this screenshot session (e.g., 'google', 'pentest-job1'): ").strip()
-    if not project_name:
+    project = input("📁 Name this session folder: ").strip()
+    if not project:
         print("❌ No name entered. Exiting.")
         return
 
-    output_dir = os.path.join("screenshots", project_name)
-    os.makedirs(output_dir, exist_ok=True)
+    out = os.path.join("screenshots", project)
+    os.makedirs(out, exist_ok=True)
 
-    with open(file_path, "r") as f:
-        domains = [line.strip() for line in f if line.strip()]
+    with open(file_path, "r", encoding="utf-8") as f:
+        domains = [line.strip().replace("*.", "") for line in f if line.strip()]
 
     driver = setup_browser()
-
-    for domain in domains:
-        if not domain.startswith("http"):
-            domain = "http://" + domain  # default to http
-        capture_screenshot(driver, domain, output_dir)
+    for d in domains:
+        url = d if d.startswith("http") else f"http://{d}"
+        capture(driver, url, out)
 
     driver.quit()
-    print(f"✅ All screenshots saved in: {output_dir}")
+    print(f"\n🎉 Done! Screenshots with watermarks in `{out}`")
 
 if __name__ == "__main__":
     main()
