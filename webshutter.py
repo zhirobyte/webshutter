@@ -97,7 +97,8 @@ def main():
     os.makedirs(out, exist_ok=True)
 
     with open(file_path, "r", encoding="utf-8") as f:
-        domains = [line.strip().replace("*.", "") for line in f if line.strip()]
+        domains = [line.strip() for line in f if line.strip()]
+
 
     driver = setup_browser()
     for d in domains:
