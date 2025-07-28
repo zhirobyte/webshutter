@@ -6,3 +6,13 @@ __pycache__/
 *.png
 output/
 screenshots/
+# Laravel
+/vendor
+/node_modules
+/storage/*.key
+/.env
+
+# Node
+node-scripts/node_modules/
+node-scripts/screenshots/
+
