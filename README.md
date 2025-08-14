@@ -12,7 +12,6 @@ Perfect for QA testing, bug reporting, asset monitoring, and visual recon.
 - ✅ Headless Chrome browsing using Selenium  
 - ✅ Stores screenshots in a structured directory  
 - ✅ Easy setup and use  
-- ✅ Compatible with Windows, Linux, and macOS
 
 ---
 
