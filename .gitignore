@@ -6,3 +6,9 @@ __pycache__/
 *.png
 output/
 screenshots/
+
+# Electron desktop
+desktop-app/node_modules/
+desktop-app/dist/
+desktop-app/out/
+desktop-app/.cache/
