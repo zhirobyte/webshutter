@@ -124,3 +124,16 @@ button:disabled {
 [hidden] {
   display: none !important;
 }
+
+.capture-controls {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+#capture-status {
+  overflow-wrap: anywhere;
+}

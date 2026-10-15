@@ -12,3 +12,7 @@ desktop-app/node_modules/
 desktop-app/dist/
 desktop-app/out/
 desktop-app/.cache/
+
+# WebShutter Desktop generated captures
+desktop-app/test-results/
+desktop-app/playwright-browsers/

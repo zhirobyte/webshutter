@@ -67,3 +67,38 @@ exportButton.addEventListener('click', async () => {
     status.textContent = `Export failed: ${error.message}`;
   }
 });
+
+const captureButton = document.getElementById('capture-button');
+const captureHost = document.getElementById('capture-host');
+const captureAuthorized = document.getElementById('capture-authorized');
+const captureStatus = document.getElementById('capture-status');
+
+captureButton.addEventListener('click', async () => {
+  if (!captureAuthorized.checked) {
+    captureStatus.textContent = 'Please confirm target authorization.';
+    return;
+  }
+
+  captureButton.disabled = true;
+  captureStatus.textContent = 'Capturing screenshot...';
+
+  try {
+    const output = await window.webshutter.capture([
+      captureHost.value.trim()
+    ]);
+
+    const result = output.results[0];
+
+    if (result.status === 'success') {
+      captureStatus.textContent =
+        `Captured ${result.host}. Saved to: ${result.screenshotPath}`;
+    } else {
+      captureStatus.textContent =
+        `Capture failed: ${result.error}`;
+    }
+  } catch (error) {
+    captureStatus.textContent = `Error: ${error.message}`;
+  } finally {
+    captureButton.disabled = false;
+  }
+});

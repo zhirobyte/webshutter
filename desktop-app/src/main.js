@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const { discover } = require('./discovery');
+const { captureHosts } = require('./capture');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -23,6 +24,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('capture:run', async (_event, hosts) => {
+    return captureHosts(hosts);
+  });
+
   ipcMain.handle('discovery:run', async (_event, domain) => {
     return discover(domain);
   });

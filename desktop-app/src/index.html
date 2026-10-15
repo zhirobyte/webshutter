@@ -35,7 +35,7 @@
 
       <button id="discover">Discover Subdomains</button>
 
-      
+
 <p id="status">Ready to discover.</p>
 
 <div id="results" hidden>
@@ -51,6 +51,23 @@
   <button id="export" type="button">Export TXT</button>
 
   <div id="host-list" class="host-list"></div>
+
+  <div class="capture-controls">
+    <label for="capture-host">Hostname to capture</label>
+    <input
+      id="capture-host"
+      type="text"
+      placeholder="example.com"
+    >
+    <label>
+      <input id="capture-authorized" type="checkbox">
+      I confirm I am authorized to capture this target.
+    </label>
+    <button id="capture-button" type="button">
+      Capture Screenshot
+    </button>
+    <p id="capture-status"></p>
+  </div>
 </div>
 
     </section>
